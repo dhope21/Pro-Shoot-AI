@@ -31,12 +31,17 @@ export const generateEditedImage = async (
   if (config.customPrompt) {
     prompt += `\n\nUSER INSTRUCTION: ${config.customPrompt} `;
     if (config.style) prompt += `\nStyle Guidance: Subject is wearing ${config.style}. `;
+    if (config.expression) prompt += `\nExpression Guidance: Subject has a ${config.expression} expression. `;
     if (config.background) prompt += `\nSetting Guidance: Location is ${config.background}. `;
   } else {
     prompt += "\n\nTASK: Produce a high-quality professional shot. ";
     
     if (config.style) {
       prompt += `\nOUTFIT: Change clothing to ${config.style}. Ensure fabrics look realistic (heavy cotton, genuine leather sheen, wool texture). `;
+    }
+
+    if (config.expression) {
+      prompt += `\nFACIAL EXPRESSION: Change the subject's expression to ${config.expression}. Ensure natural muscle changes in the face (eyes, mouth corners) to match this emotion authentically while strictly preserving facial identity. `;
     }
     
     if (config.background) {

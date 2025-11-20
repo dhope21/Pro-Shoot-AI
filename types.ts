@@ -18,9 +18,20 @@ export enum BackgroundType {
   BEACH = 'Golden Hour Beach'
 }
 
+export enum Expression {
+  SMILING = 'Warm Smile',
+  LAUGHING = 'Laughing Candidly',
+  SERIOUS = 'Serious Professional',
+  SEDUCTIVE = 'Seductive / Alluring',
+  ANGRY = 'Fierce / Intense',
+  SAD = 'Melancholic / Moody',
+  NEUTRAL = 'Calm Neutral'
+}
+
 export interface GenerationConfig {
   style: OutfitStyle | null;
   background: BackgroundType | null;
+  expression: Expression | null;
   customPrompt: string;
   region: string;
 }

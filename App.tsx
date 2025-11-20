@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Upload, Wand2, Image as ImageIcon, Info, Trash2, Plus, X, Sparkles } from 'lucide-react';
 import OptionSelector from './components/OptionSelector';
 import ResultDisplay from './components/ResultDisplay';
-import { OutfitStyle, BackgroundType, GenerationConfig, ImageInput } from './types';
+import { OutfitStyle, BackgroundType, Expression, GenerationConfig, ImageInput } from './types';
 import { generateEditedImage } from './services/geminiService';
 import { fileToBase64 } from './utils/imageUtils';
 
@@ -14,6 +14,7 @@ const App: React.FC = () => {
 
   const [selectedStyle, setSelectedStyle] = useState<OutfitStyle | null>(null);
   const [selectedBackground, setSelectedBackground] = useState<BackgroundType | null>(null);
+  const [selectedExpression, setSelectedExpression] = useState<Expression | null>(null);
   const [customPrompt, setCustomPrompt] = useState('');
   const [region, setRegion] = useState('');
 
@@ -73,8 +74,8 @@ const App: React.FC = () => {
       return;
     }
 
-    if (!selectedStyle && !selectedBackground && !customPrompt.trim() && !region.trim()) {
-      setError('Please select a style, background, or enter a prompt/region.');
+    if (!selectedStyle && !selectedBackground && !selectedExpression && !customPrompt.trim() && !region.trim()) {
+      setError('Please select at least one option (Style, Expression, Background) or enter a prompt.');
       return;
     }
 
@@ -85,6 +86,7 @@ const App: React.FC = () => {
       const config: GenerationConfig = {
         style: selectedStyle,
         background: selectedBackground,
+        expression: selectedExpression,
         customPrompt,
         region,
       };
@@ -97,13 +99,14 @@ const App: React.FC = () => {
     } finally {
       setIsGenerating(false);
     }
-  }, [uploadedImages, selectedStyle, selectedBackground, customPrompt, region]);
+  }, [uploadedImages, selectedStyle, selectedBackground, selectedExpression, customPrompt, region]);
 
   const handleReset = () => {
     setUploadedImages([]);
     setGeneratedImage(null);
     setSelectedStyle(null);
     setSelectedBackground(null);
+    setSelectedExpression(null);
     setCustomPrompt('');
     setRegion('');
     setError(null);
@@ -196,6 +199,8 @@ const App: React.FC = () => {
                 setSelectedStyle={setSelectedStyle}
                 selectedBackground={selectedBackground}
                 setSelectedBackground={setSelectedBackground}
+                selectedExpression={selectedExpression}
+                setSelectedExpression={setSelectedExpression}
                 region={region}
                 setRegion={setRegion}
               />
