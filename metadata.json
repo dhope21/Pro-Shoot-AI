@@ -1,0 +1,7 @@
+{
+  "name": "ProShoot AI - Nano Banana",
+  "description": "Professional photoshoot generator and AI image editor using Gemini 2.5 Flash Image. Upload reference photos to generate hyper-realistic professional shots or edit existing images with natural language prompts.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
