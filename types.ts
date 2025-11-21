@@ -16,17 +16,9 @@ export enum BackgroundType {
   NEON = 'Neon City'
 }
 
-export enum Expression {
-  SMILING = 'Warm Smile',
-  LAUGHING = 'Laughing Candidly',
-  SERIOUS = 'Serious Professional',
-  NEUTRAL = 'Calm Neutral'
-}
-
 export interface GenerationConfig {
   style: string | null;
   background: string | null;
-  expression: string | null;
   customPrompt: string;
   region: string;
 }

@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Modality } from "@google/genai";
 import { GenerationConfig, ImageInput } from "../types";
 
@@ -15,14 +16,18 @@ export const generateEditedImage = async (
 ): Promise<string> => {
   const ai = getClient();
   
-  // Advanced Prompt Engineering for Hyper-Realism
-  let prompt = "ROLE: You are a world-class photographer shooting on high-end 35mm film (e.g., Kodak Portra 400) or a Phase One digital back. ";
+  // Advanced Prompt Engineering for Hyper-Realism and Identity Preservation
+  let prompt = "CRITICAL PRIORITY: FACIAL IDENTITY PRESERVATION.\n";
+  prompt += "The subject in the output image MUST be an EXACT visual match to the person in the reference photos. Do not generate a generic person who looks similar. You must preserve the specific facial features, bone structure, eye shape, nose shape, and skin details of the reference subject exactly.\n";
+  prompt += "If the face looks different from the reference, the result is failed. Do not beautify, smooth, or alter the person's identity.\n\n";
+
+  prompt += "ROLE: You are a world-class portrait photographer shooting on high-end 35mm film (e.g., Kodak Portra 400). ";
   
-  prompt += "\n\nOBJECTIVE: Generate a photorealistic image using the provided reference(s). The result MUST be indistinguishable from a real photograph. ";
+  prompt += "\n\nOBJECTIVE: Create a new photograph of THE EXACT SAME PERSON from the references, but in a new setting/outfit. ";
   prompt += "\nCRITICAL STYLE GUIDELINES (ANTI-AI): ";
-  prompt += "\n- Texture: Skin must have visible pores, micro-texture, and natural irregularities. Do NOT airbrush or smooth skin. ";
-  prompt += "\n- Lighting: Use natural, physically accurate lighting. Allow for slight imperfections like lens flares, organic shadows, or film grain to sell the realism. ";
-  prompt += "\n- Environment: Backgrounds must look 'lived-in' and detailed, not sterile or empty.";
+  prompt += "\n- Texture: Skin must have visible pores, micro-texture, and natural irregularities. Do NOT airbrush.";
+  prompt += "\n- Lighting: Use natural, physically accurate lighting. Allow for organic shadows and film grain.";
+  prompt += "\n- Realism: The result must be indistinguishable from a real photograph taken with a camera.";
   
   if (config.region) {
     prompt += `\n\nLOCATION CONTEXT: The photo is taken in ${config.region}. Ensure the background architecture, street signs, foliage, and lighting vibe reflect this specific region authentically. `;
@@ -30,18 +35,15 @@ export const generateEditedImage = async (
 
   if (config.customPrompt) {
     prompt += `\n\nUSER INSTRUCTION: ${config.customPrompt} `;
-    if (config.style) prompt += `\nStyle Guidance: Subject is wearing ${config.style}. `;
-    if (config.expression) prompt += `\nExpression Guidance: Subject has a ${config.expression} expression. `;
-    if (config.background) prompt += `\nSetting Guidance: Location is ${config.background}. `;
+    if (config.style) prompt += `\nOUTFIT REQUIREMENT: Subject is wearing ${config.style}. `;
+    if (config.background) prompt += `\nSETTING REQUIREMENT: Location is ${config.background}. `;
   } else {
-    prompt += "\n\nTASK: Produce a high-quality professional shot. ";
+    prompt += "\n\nTASK SPECIFICS: ";
     
     if (config.style) {
       prompt += `\nOUTFIT: Change clothing to ${config.style}. Ensure fabrics look realistic (heavy cotton, genuine leather sheen, wool texture). `;
-    }
-
-    if (config.expression) {
-      prompt += `\nFACIAL EXPRESSION: Change the subject's expression to ${config.expression}. Ensure natural muscle changes in the face (eyes, mouth corners) to match this emotion authentically while strictly preserving facial identity. `;
+    } else {
+      prompt += "\nOUTFIT: Keep the outfit suitable for the context, or similar to reference if not specified.";
     }
     
     if (config.background) {
@@ -50,11 +52,11 @@ export const generateEditedImage = async (
         prompt += `Adapt this setting to match the aesthetic of ${config.region}. `;
       }
     }
-    
-    prompt += "\nIDENTITY: Preserve the facial identity structure exactly.";
   }
 
-  prompt += "\n\nFINAL OUTPUT: A raw, uncompressed looking photograph. Avoid the 'plastic' look of standard AI generation.";
+  prompt += "\n\nEXPRESSION: Maintain the subject's natural expression from the reference images. Do not force a smile if the reference is serious. Match the vibe of the reference photos.";
+  
+  prompt += "\n\nFINAL VERIFICATION: Check the face in your generated image against the reference. Is it the same person? If not, correct it. The face must be pixel-perfect to the identity.";
 
   try {
     const parts: any[] = [];
