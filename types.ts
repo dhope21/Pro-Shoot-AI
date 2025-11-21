@@ -21,6 +21,7 @@ export interface GenerationConfig {
   background: string | null;
   customPrompt: string;
   region: string;
+  socialPlatform: string | null;
 }
 
 export interface ImageInput {

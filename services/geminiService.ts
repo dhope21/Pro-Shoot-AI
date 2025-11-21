@@ -29,6 +29,27 @@ export const generateEditedImage = async (
   prompt += "\n- Lighting: Use natural, physically accurate lighting. Allow for organic shadows and film grain.";
   prompt += "\n- Realism: The result must be indistinguishable from a real photograph taken with a camera.";
   
+  // Social Media Customization Logic
+  if (config.socialPlatform) {
+    prompt += `\n\nINTENDED USE: The photo is for a ${config.socialPlatform} profile. `;
+    
+    const platform = config.socialPlatform.toLowerCase();
+    if (platform.includes('linkedin')) {
+      prompt += "VIBE: Professional, corporate, confident, trustworthy, and authoritative. Clear, well-lit face. Clean composition. Suitable for a career profile. ";
+      if (!config.style) prompt += "OUTFIT DEFAULT: If not specified, assume business professional or smart casual. ";
+    } else if (platform.includes('whatsapp')) {
+      prompt += "VIBE: Approachable, friendly, stylish but casual. A good-looking profile picture that feels personal and authentic. Clear face visibility. ";
+    } else if (platform.includes('instagram')) {
+      prompt += "VIBE: Aesthetic, trendy, high-quality lifestyle photography. Vibrant lighting, engaging composition, 'influencer' quality. Visually striking. ";
+    } else if (platform.includes('twitter') || platform.includes('x')) {
+      prompt += "VIBE: Smart, modern, clean, tech-savvy. Minimalist and sharp. ";
+    } else if (platform.includes('dating') || platform.includes('tinder')) {
+      prompt += "VIBE: Attractive, warm, confident, and inviting. Flattering lighting (golden hour or soft studio). Best angle. ";
+    } else {
+      prompt += "VIBE: High quality, engaging, and suitable for this platform. ";
+    }
+  }
+
   if (config.region) {
     prompt += `\n\nLOCATION CONTEXT: The photo is taken in ${config.region}. Ensure the background architecture, street signs, foliage, and lighting vibe reflect this specific region authentically. `;
   }
@@ -43,7 +64,7 @@ export const generateEditedImage = async (
     if (config.style) {
       prompt += `\nOUTFIT: Change clothing to ${config.style}. Ensure fabrics look realistic (heavy cotton, genuine leather sheen, wool texture). `;
     } else {
-      prompt += "\nOUTFIT: Keep the outfit suitable for the context, or similar to reference if not specified.";
+      prompt += "\nOUTFIT: Keep the outfit suitable for the context/platform, or similar to reference if not specified.";
     }
     
     if (config.background) {
@@ -54,7 +75,7 @@ export const generateEditedImage = async (
     }
   }
 
-  prompt += "\n\nEXPRESSION: Maintain the subject's natural expression from the reference images. Do not force a smile if the reference is serious. Match the vibe of the reference photos.";
+  prompt += "\n\nEXPRESSION: Maintain the subject's natural expression from the reference images, but adapt slightly to fit the vibe of the selected platform (e.g., confident for LinkedIn, warm for Dating). Do not force a smile if the reference is serious, but ensure it fits the context.";
   
   prompt += "\n\nFINAL VERIFICATION: Check the face in your generated image against the reference. Is it the same person? If not, correct it. The face must be pixel-perfect to the identity.";
 

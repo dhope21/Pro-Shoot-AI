@@ -18,6 +18,7 @@ const App: React.FC = () => {
   const [selectedBackground, setSelectedBackground] = useState<string | null>(null);
   const [customPrompt, setCustomPrompt] = useState('');
   const [region, setRegion] = useState('');
+  const [socialPlatform, setSocialPlatform] = useState<string | null>(null);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -75,8 +76,8 @@ const App: React.FC = () => {
       return;
     }
 
-    if (!selectedStyle && !selectedBackground && !customPrompt.trim() && !region.trim()) {
-      setError('Please select at least one option (Style, Background) or enter a prompt.');
+    if (!selectedStyle && !selectedBackground && !customPrompt.trim() && !region.trim() && !socialPlatform) {
+      setError('Please select at least one option (Style, Background, Social Media) or enter a prompt.');
       return;
     }
 
@@ -89,6 +90,7 @@ const App: React.FC = () => {
         background: selectedBackground,
         customPrompt,
         region,
+        socialPlatform
       };
 
       const resultUrl = await generateEditedImage(uploadedImages, config);
@@ -99,7 +101,7 @@ const App: React.FC = () => {
     } finally {
       setIsGenerating(false);
     }
-  }, [uploadedImages, selectedStyle, selectedBackground, customPrompt, region]);
+  }, [uploadedImages, selectedStyle, selectedBackground, customPrompt, region, socialPlatform]);
 
   const handleReset = () => {
     setUploadedImages([]);
@@ -108,6 +110,7 @@ const App: React.FC = () => {
     setSelectedBackground(null);
     setCustomPrompt('');
     setRegion('');
+    setSocialPlatform(null);
     setError(null);
   };
 
@@ -200,6 +203,8 @@ const App: React.FC = () => {
                 setSelectedBackground={setSelectedBackground}
                 region={region}
                 setRegion={setRegion}
+                socialPlatform={socialPlatform}
+                setSocialPlatform={setSocialPlatform}
               />
 
               <div className="space-y-2">

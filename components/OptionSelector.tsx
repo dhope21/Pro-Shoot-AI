@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { OutfitStyle, BackgroundType } from '../types';
-import { Briefcase, Home, Building2, Camera, Shirt, User, Trees, Zap, MapPin, X, PenTool } from 'lucide-react';
+import { Briefcase, Home, Building2, Camera, Shirt, User, Trees, Zap, MapPin, X, PenTool, Linkedin, Instagram, MessageCircle, Heart, Twitter, Share2 } from 'lucide-react';
 
 interface OptionSelectorProps {
   selectedStyle: string | null;
@@ -10,6 +10,8 @@ interface OptionSelectorProps {
   setSelectedBackground: (bg: string | null) => void;
   region: string;
   setRegion: (region: string) => void;
+  socialPlatform: string | null;
+  setSocialPlatform: (platform: string | null) => void;
 }
 
 const OptionSelector: React.FC<OptionSelectorProps> = ({
@@ -18,9 +20,19 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
   selectedBackground,
   setSelectedBackground,
   region,
-  setRegion
+  setRegion,
+  socialPlatform,
+  setSocialPlatform
 }) => {
   
+  const socialPlatforms = [
+    { id: 'LinkedIn', label: 'LinkedIn', icon: <Linkedin className="w-4 h-4 shrink-0" />, color: 'indigo' },
+    { id: 'Instagram', label: 'Instagram', icon: <Instagram className="w-4 h-4 shrink-0" />, color: 'pink' },
+    { id: 'WhatsApp', label: 'WhatsApp', icon: <MessageCircle className="w-4 h-4 shrink-0" />, color: 'emerald' },
+    { id: 'Twitter', label: 'Twitter / X', icon: <Twitter className="w-4 h-4 shrink-0" />, color: 'sky' },
+    { id: 'Dating App', label: 'Dating App', icon: <Heart className="w-4 h-4 shrink-0" />, color: 'rose' },
+  ];
+
   const styles = [
     { id: OutfitStyle.CASUAL, label: 'Casual', icon: <Shirt className="w-4 h-4 shrink-0" /> },
     { id: OutfitStyle.FORMAL, label: 'Formal Suit', icon: <Briefcase className="w-4 h-4 shrink-0" /> },
@@ -40,9 +52,73 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
 
   const isCustomStyle = selectedStyle && !Object.values(OutfitStyle).includes(selectedStyle as OutfitStyle);
   const isCustomBackground = selectedBackground && !Object.values(BackgroundType).includes(selectedBackground as BackgroundType);
+  const isCustomSocial = socialPlatform && !socialPlatforms.find(p => p.id === socialPlatform);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      
+      {/* Social Media Goal */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+              <Share2 className="w-4 h-4" />
+              Social Media Goal
+            </h3>
+            {socialPlatform && (
+                <button onClick={() => setSocialPlatform(null)} className="text-xs text-zinc-500 hover:text-white flex items-center gap-1">
+                    <X className="w-3 h-3" /> Clear
+                </button>
+            )}
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-2">
+          {socialPlatforms.map((item) => {
+            const isSelected = socialPlatform === item.id;
+            let activeClass = '';
+            if (isSelected) {
+                if (item.color === 'indigo') activeClass = 'bg-indigo-600/20 border-indigo-500 text-indigo-200 shadow-[0_0_10px_rgba(99,102,241,0.2)]';
+                if (item.color === 'pink') activeClass = 'bg-pink-600/20 border-pink-500 text-pink-200 shadow-[0_0_10px_rgba(236,72,153,0.2)]';
+                if (item.color === 'emerald') activeClass = 'bg-emerald-600/20 border-emerald-500 text-emerald-200 shadow-[0_0_10px_rgba(16,185,129,0.2)]';
+                if (item.color === 'sky') activeClass = 'bg-sky-600/20 border-sky-500 text-sky-200 shadow-[0_0_10px_rgba(14,165,233,0.2)]';
+                if (item.color === 'rose') activeClass = 'bg-rose-600/20 border-rose-500 text-rose-200 shadow-[0_0_10px_rgba(244,63,94,0.2)]';
+            }
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => setSocialPlatform(isSelected ? null : item.id)}
+                className={`
+                  flex items-center gap-2 px-3 py-3 rounded-xl border text-xs font-medium transition-all duration-200 h-auto min-h-[3rem]
+                  ${isSelected 
+                    ? activeClass
+                    : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-800'
+                  }
+                `}
+              >
+                <span className="mt-0.5">{item.icon}</span>
+                <span className="text-left whitespace-normal leading-snug">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        
+        {/* Custom Social Input */}
+        <div className={`
+            bg-zinc-900 border rounded-xl p-1 flex items-center transition-all
+            ${isCustomSocial ? 'border-indigo-500 ring-1 ring-indigo-500/50' : 'border-zinc-800 focus-within:border-indigo-500'}
+        `}>
+            <div className="pl-3 text-zinc-500">
+                <PenTool className="w-4 h-4" />
+            </div>
+            <input 
+              type="text" 
+              value={isCustomSocial ? socialPlatform || '' : ''}
+              onChange={(e) => setSocialPlatform(e.target.value)}
+              placeholder="Or type platform (e.g. 'Discord Profile')..."
+              className="w-full bg-transparent text-sm text-zinc-200 placeholder:text-zinc-600 px-3 py-2 focus:outline-none"
+            />
+        </div>
+      </div>
+
       {/* Region Filter */}
       <div>
          <div className="flex items-center justify-between mb-3">
