@@ -5,7 +5,7 @@ import OptionSelector from './components/OptionSelector';
 import ResultDisplay from './components/ResultDisplay';
 import { GenerationConfig, ImageInput } from './types';
 import { generateEditedImage } from './services/geminiService';
-import { fileToBase64 } from './utils/imageUtils';
+import { fileToBase64, dataUrlToBase64 } from './utils/imageUtils';
 
 const App: React.FC = () => {
   const [uploadedImages, setUploadedImages] = useState<ImageInput[]>([]);
@@ -102,6 +102,45 @@ const App: React.FC = () => {
       setIsGenerating(false);
     }
   }, [uploadedImages, selectedStyle, selectedBackground, customPrompt, region, socialPlatform]);
+
+  const handleRefinement = useCallback(async (refinePrompt: string) => {
+    if (!generatedImage) return;
+
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+        // Convert the current result into an input for the next step
+        const base64Data = dataUrlToBase64(generatedImage);
+        const mimeType = generatedImage.split(';')[0].split(':')[1] || 'image/png';
+        
+        const refinementInput: ImageInput = {
+            id: 'generated-ref',
+            file: new File([], 'generated.png'), // Dummy file object
+            base64: base64Data,
+            mimeType: mimeType,
+            previewUrl: generatedImage
+        };
+
+        // For refinement, we clear specific style/background instructions to avoid 
+        // re-applying them forcefully, and focus on the user's new prompt.
+        const config: GenerationConfig = {
+            style: null,
+            background: null,
+            region: '',
+            socialPlatform: null,
+            customPrompt: refinePrompt
+        };
+
+        const resultUrl = await generateEditedImage([refinementInput], config);
+        setGeneratedImage(resultUrl);
+    } catch (err: any) {
+        console.error("Refinement failed", err);
+        setError(err.message || 'Failed to refine image.');
+    } finally {
+        setIsGenerating(false);
+    }
+  }, [generatedImage]);
 
   const handleReset = () => {
     setUploadedImages([]);
@@ -273,6 +312,7 @@ const App: React.FC = () => {
                   generatedImage={generatedImage}
                   isGenerating={isGenerating}
                   onReset={handleReset}
+                  onRefine={handleRefinement}
                 />
               </div>
 
