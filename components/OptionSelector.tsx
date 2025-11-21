@@ -1,14 +1,15 @@
+
 import React from 'react';
 import { OutfitStyle, BackgroundType, Expression } from '../types';
-import { Briefcase, Home, Building2, Camera, Shirt, User, Trees, Zap, Sun, X, MapPin, Smile, Frown, Heart, Meh, CloudRain, Flame } from 'lucide-react';
+import { Briefcase, Home, Building2, Camera, Shirt, User, Trees, Zap, Sun, X, MapPin, Smile, Meh, PenTool } from 'lucide-react';
 
 interface OptionSelectorProps {
-  selectedStyle: OutfitStyle | null;
-  setSelectedStyle: (style: OutfitStyle | null) => void;
-  selectedBackground: BackgroundType | null;
-  setSelectedBackground: (bg: BackgroundType | null) => void;
-  selectedExpression: Expression | null;
-  setSelectedExpression: (exp: Expression | null) => void;
+  selectedStyle: string | null;
+  setSelectedStyle: (style: string | null) => void;
+  selectedBackground: string | null;
+  setSelectedBackground: (bg: string | null) => void;
+  selectedExpression: string | null;
+  setSelectedExpression: (exp: string | null) => void;
   region: string;
   setRegion: (region: string) => void;
 }
@@ -25,22 +26,17 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
 }) => {
   
   const styles = [
-    { id: OutfitStyle.CASUAL, label: 'Casual Everyday', icon: <Shirt className="w-4 h-4 shrink-0" /> },
+    { id: OutfitStyle.CASUAL, label: 'Casual', icon: <Shirt className="w-4 h-4 shrink-0" /> },
     { id: OutfitStyle.FORMAL, label: 'Formal Suit', icon: <Briefcase className="w-4 h-4 shrink-0" /> },
-    { id: OutfitStyle.HOODIE, label: 'Streetwear Hoodie', icon: <User className="w-4 h-4 shrink-0" /> },
+    { id: OutfitStyle.HOODIE, label: 'Zipper Hoodie', icon: <User className="w-4 h-4 shrink-0" /> },
     { id: OutfitStyle.LEATHER_JACKET, label: 'Leather Jacket', icon: <Camera className="w-4 h-4 shrink-0" /> },
-    { id: OutfitStyle.TURTLENECK, label: 'Black Turtleneck', icon: <User className="w-4 h-4 shrink-0" /> },
     { id: OutfitStyle.CYBERPUNK, label: 'Cyberpunk Techwear', icon: <Zap className="w-4 h-4 shrink-0" /> },
-    { id: OutfitStyle.VINTAGE, label: 'Vintage 90s', icon: <Camera className="w-4 h-4 shrink-0" /> },
   ];
 
   const expressions = [
     { id: Expression.SMILING, label: 'Smiling', icon: <Smile className="w-4 h-4 shrink-0" /> },
     { id: Expression.LAUGHING, label: 'Laughing', icon: <Smile className="w-4 h-4 shrink-0" /> },
     { id: Expression.SERIOUS, label: 'Serious', icon: <User className="w-4 h-4 shrink-0" /> },
-    { id: Expression.SEDUCTIVE, label: 'Seductive', icon: <Heart className="w-4 h-4 shrink-0" /> },
-    { id: Expression.ANGRY, label: 'Fierce', icon: <Flame className="w-4 h-4 shrink-0" /> },
-    { id: Expression.SAD, label: 'Moody', icon: <CloudRain className="w-4 h-4 shrink-0" /> },
     { id: Expression.NEUTRAL, label: 'Neutral', icon: <Meh className="w-4 h-4 shrink-0" /> },
   ];
 
@@ -51,8 +47,11 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
     { id: BackgroundType.BALCONY, label: 'Luxury Balcony', icon: <Building2 className="w-4 h-4 shrink-0" /> },
     { id: BackgroundType.OUTDOOR, label: 'Urban Bokeh', icon: <Trees className="w-4 h-4 shrink-0" /> },
     { id: BackgroundType.NEON, label: 'Neon City', icon: <Zap className="w-4 h-4 shrink-0" /> },
-    { id: BackgroundType.BEACH, label: 'Golden Beach', icon: <Sun className="w-4 h-4 shrink-0" /> },
   ];
+
+  const isCustomStyle = selectedStyle && !Object.values(OutfitStyle).includes(selectedStyle as OutfitStyle);
+  const isCustomExpression = selectedExpression && !Object.values(Expression).includes(selectedExpression as Expression);
+  const isCustomBackground = selectedBackground && !Object.values(BackgroundType).includes(selectedBackground as BackgroundType);
 
   return (
     <div className="space-y-6">
@@ -93,7 +92,7 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
                 </button>
             )}
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-2">
           {styles.map((item) => (
             <button
               key={item.id}
@@ -111,6 +110,23 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
             </button>
           ))}
         </div>
+        
+        {/* Custom Style Input */}
+        <div className={`
+            bg-zinc-900 border rounded-xl p-1 flex items-center transition-all
+            ${isCustomStyle ? 'border-indigo-500 ring-1 ring-indigo-500/50' : 'border-zinc-800 focus-within:border-indigo-500'}
+        `}>
+            <div className="pl-3 text-zinc-500">
+                <PenTool className="w-4 h-4" />
+            </div>
+            <input 
+              type="text" 
+              value={isCustomStyle ? selectedStyle || '' : ''}
+              onChange={(e) => setSelectedStyle(e.target.value)}
+              placeholder="Or type your own outfit (e.g. 'Red Prom Dress')..."
+              className="w-full bg-transparent text-sm text-zinc-200 placeholder:text-zinc-600 px-3 py-2 focus:outline-none"
+            />
+        </div>
       </div>
 
       {/* Expressions */}
@@ -123,7 +139,7 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
                 </button>
             )}
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-2">
           {expressions.map((item) => (
             <button
               key={item.id}
@@ -141,6 +157,23 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
             </button>
           ))}
         </div>
+
+        {/* Custom Expression Input */}
+        <div className={`
+            bg-zinc-900 border rounded-xl p-1 flex items-center transition-all
+            ${isCustomExpression ? 'border-pink-500 ring-1 ring-pink-500/50' : 'border-zinc-800 focus-within:border-pink-500'}
+        `}>
+            <div className="pl-3 text-zinc-500">
+                <PenTool className="w-4 h-4" />
+            </div>
+            <input 
+              type="text" 
+              value={isCustomExpression ? selectedExpression || '' : ''}
+              onChange={(e) => setSelectedExpression(e.target.value)}
+              placeholder="Or type your own expression (e.g. 'Surprised')..."
+              className="w-full bg-transparent text-sm text-zinc-200 placeholder:text-zinc-600 px-3 py-2 focus:outline-none"
+            />
+        </div>
       </div>
 
       {/* Backgrounds */}
@@ -153,7 +186,7 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
                 </button>
             )}
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-2">
           {backgrounds.map((item) => (
             <button
               key={item.id}
@@ -170,6 +203,23 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
               <span className="text-left whitespace-normal leading-snug">{item.label}</span>
             </button>
           ))}
+        </div>
+
+        {/* Custom Background Input */}
+        <div className={`
+            bg-zinc-900 border rounded-xl p-1 flex items-center transition-all
+            ${isCustomBackground ? 'border-emerald-500 ring-1 ring-emerald-500/50' : 'border-zinc-800 focus-within:border-emerald-500'}
+        `}>
+            <div className="pl-3 text-zinc-500">
+                <PenTool className="w-4 h-4" />
+            </div>
+            <input 
+              type="text" 
+              value={isCustomBackground ? selectedBackground || '' : ''}
+              onChange={(e) => setSelectedBackground(e.target.value)}
+              placeholder="Or type your own background (e.g. 'Space Station')..."
+              className="w-full bg-transparent text-sm text-zinc-200 placeholder:text-zinc-600 px-3 py-2 focus:outline-none"
+            />
         </div>
       </div>
     </div>

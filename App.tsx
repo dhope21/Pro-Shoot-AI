@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Upload, Wand2, Image as ImageIcon, Info, Trash2, Plus, X, Sparkles } from 'lucide-react';
 import OptionSelector from './components/OptionSelector';
@@ -12,9 +13,10 @@ const App: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [selectedStyle, setSelectedStyle] = useState<OutfitStyle | null>(null);
-  const [selectedBackground, setSelectedBackground] = useState<BackgroundType | null>(null);
-  const [selectedExpression, setSelectedExpression] = useState<Expression | null>(null);
+  // Changed to string | null to support custom inputs
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
+  const [selectedBackground, setSelectedBackground] = useState<string | null>(null);
+  const [selectedExpression, setSelectedExpression] = useState<string | null>(null);
   const [customPrompt, setCustomPrompt] = useState('');
   const [region, setRegion] = useState('');
 

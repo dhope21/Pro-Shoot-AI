@@ -1,37 +1,32 @@
+
 export enum OutfitStyle {
-  CASUAL = 'Casual Everyday',
-  FORMAL = 'Formal Business Suit',
-  HOODIE = 'Streetwear Hoodie',
+  CASUAL = 'Casual',
+  FORMAL = 'Formal Suit',
+  HOODIE = 'Zipper Hoodie',
   LEATHER_JACKET = 'Leather Jacket',
-  TURTLENECK = 'Black Turtleneck',
-  CYBERPUNK = 'Cyberpunk Techwear',
-  VINTAGE = 'Vintage 90s Aesthetic'
+  CYBERPUNK = 'Cyberpunk Techwear'
 }
 
 export enum BackgroundType {
-  STUDIO = 'Professional Studio',
-  OFFICE = 'Modern Office Space',
-  HOME = 'Cozy Modern Home',
-  BALCONY = 'Luxury City Balcony',
-  OUTDOOR = 'Urban Street Bokeh',
-  NEON = 'Neon City Night',
-  BEACH = 'Golden Hour Beach'
+  STUDIO = 'Pro Studio',
+  OFFICE = 'Modern Office',
+  HOME = 'Cozy Home',
+  BALCONY = 'Luxury Balcony',
+  OUTDOOR = 'Urban Bokeh',
+  NEON = 'Neon City'
 }
 
 export enum Expression {
   SMILING = 'Warm Smile',
   LAUGHING = 'Laughing Candidly',
   SERIOUS = 'Serious Professional',
-  SEDUCTIVE = 'Seductive / Alluring',
-  ANGRY = 'Fierce / Intense',
-  SAD = 'Melancholic / Moody',
   NEUTRAL = 'Calm Neutral'
 }
 
 export interface GenerationConfig {
-  style: OutfitStyle | null;
-  background: BackgroundType | null;
-  expression: Expression | null;
+  style: string | null;
+  background: string | null;
+  expression: string | null;
   customPrompt: string;
   region: string;
 }
