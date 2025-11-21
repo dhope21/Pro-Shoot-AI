@@ -196,6 +196,7 @@ const App: React.FC = () => {
               </div>
               
               <div className="grid grid-cols-2 gap-3">
+                {/* Uploaded Images */}
                 {uploadedImages.map((img) => (
                    <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden border border-zinc-700 group">
                       <img src={img.previewUrl} alt="Ref" className="w-full h-full object-cover" />
@@ -208,12 +209,13 @@ const App: React.FC = () => {
                    </div>
                 ))}
 
+                {/* Upload Button */}
                 {uploadedImages.length < 4 && (
-                  <label className="cursor-pointer aspect-square rounded-xl border-2 border-dashed border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 hover:border-zinc-600 transition-all flex flex-col items-center justify-center gap-2 group">
-                    <div className="w-8 h-8 rounded-full bg-zinc-800 group-hover:bg-zinc-700 flex items-center justify-center transition-colors">
+                  <label className="cursor-pointer aspect-square rounded-xl border-2 border-dashed border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 hover:border-zinc-600 transition-all flex flex-col items-center justify-center gap-2 group relative overflow-hidden">
+                    <div className="w-8 h-8 rounded-full bg-zinc-800 group-hover:bg-zinc-700 flex items-center justify-center transition-colors z-10">
                       <Plus className="w-5 h-5 text-zinc-400 group-hover:text-zinc-200" />
                     </div>
-                    <span className="text-xs text-zinc-500 font-medium">Add Photo</span>
+                    <span className="text-xs text-zinc-500 font-medium z-10">Add Photo</span>
                     <input 
                       type="file" 
                       onChange={handleFileChange}
@@ -222,6 +224,26 @@ const App: React.FC = () => {
                       multiple
                     />
                   </label>
+                )}
+
+                {/* Example Photo - Shown only when no images uploaded to fill grid and guide user */}
+                {uploadedImages.length === 0 && (
+                    <div className="relative aspect-square rounded-xl overflow-hidden border border-zinc-800 opacity-80 hover:opacity-100 transition-opacity select-none cursor-help group">
+                        <img 
+                            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&q=80" 
+                            alt="Good Example" 
+                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                        />
+                        <div className="absolute top-2 right-2 bg-emerald-500/90 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-lg backdrop-blur-sm">
+                            IDEAL INPUT
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 via-black/60 to-transparent text-xs">
+                            <p className="text-white font-medium mb-0.5 flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Clear Face
+                            </p>
+                            <p className="text-zinc-400 text-[10px]">Good lighting, high res</p>
+                        </div>
+                    </div>
                 )}
               </div>
               {uploadedImages.length === 0 && (
